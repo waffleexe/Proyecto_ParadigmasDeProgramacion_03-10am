@@ -9,17 +9,20 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+//expressor transpile --out output HelloWorld.Expresso
+//command transpile
 @Command(name = "transpile",
         description = "Transpilation (translation) from Expresso to Java (.expresso -> .java)",
         mixinStandardHelpOptions = true)
 public class Transpile implements Runnable {
-
+    //file type
     @Parameters(paramLabel = "File", description = ".expresso file")
     File expressoFile;
-
+    //folder name
     @Option(names = { "-o", "--out" }, description = "Defines the output folder where the file is saved")
     File directory = new File(".");
 
+    //details steps
     @Option(names = { "-ver", "--verbose" }, description = "Indicates the steps being executed.")
     Boolean verbose = false;
 
@@ -34,6 +37,7 @@ public class Transpile implements Runnable {
     public File createOutputDirectory(){
         String rootPath = ".";
 
+        //if the directory doesnt exist
         if(directory == null)
             directory = new File(rootPath);
         else {
@@ -49,6 +53,7 @@ public class Transpile implements Runnable {
         if(isValidFile() && isExpressoFile()) {
             if(verbose) System.out.println("\nCreating .java file...");
 
+            //nombre completo de la extension, lo toma desde el inicio hasta encontrar el punto
             String fileName = expressoFile.getName().substring(0, expressoFile.getName().lastIndexOf('.'));
             createOutputDirectory();
 
