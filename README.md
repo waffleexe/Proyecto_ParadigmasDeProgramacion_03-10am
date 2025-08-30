@@ -20,4 +20,4 @@ jlink --output build/runtime --add-modules java.base,java.compiler,jdk.compiler 
 
 Step 5. Create expresso.exe
 CMD
-jpackage --input build/libs --name expressor --main-jar Expressor-1.0-SNAPSHOT-all.jar --main-class cli.Expressor --type app-image --dest expresor_package --win-console --runtime-image build/runtime
+jpackage --input build/libs --name expressor --main-jar Expressor-1.0-SNAPSHOT.jar --main-class cli.Expressor --type app-image --dest expresor_package --win-console --runtime-image build/runtime
