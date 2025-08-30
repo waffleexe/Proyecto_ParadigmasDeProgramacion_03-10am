@@ -15,34 +15,25 @@ import java.net.URLClassLoader;
 @Command(name = "run",
         description = "Transpiles, compiles (build), and runs the .java program",
         mixinStandardHelpOptions = true)
-public class Run implements Runnable {
+public class Run extends BaseCommand {
 
-    @Parameters(paramLabel = "File", description = ".expresso file")
-    File executableFile;
+    @Override
+    public void run() {
+        File javaFile = generateJavaFile();
+        if (javaFile == null) return;
 
-    @Option(names = { "-o", "--out" }, description = "Defines the output folder where the file is saved")
-    File directory = new File(".");
+        //compile the java file
+        Build build = new Build();
+        build.expressoFile = javaFile;
+        build.directory = directory;
+        build.verbose = verbose;
+        build.run();
 
-    @Option(names = { "-ver", "--verbose" }, description = "Indicates the steps being executed.")
-    Boolean verbose = false;
-
-    public void executeFile() {
-        new Build() {{
-            this.javaFile = executableFile;
-            this.dir = Run.this.directory;
-            this.verbose = Run.this.verbose;
-            this.run();
-            Run.this.executableFile = this.javaFile;
-            Run.this.directory = this.dir;
-        }};
-
-        if (executableFile == null)
-            return;
 
         URLClassLoader classLoader = null;
         try {
             classLoader = URLClassLoader.newInstance(new URL[]{directory.toURI().toURL()});
-            String className = executableFile.getName().substring(0, executableFile.getName().lastIndexOf('.'));
+            String className = javaFile.getName().substring(0, javaFile.getName().lastIndexOf('.'));
 
             if (verbose) System.out.println("\nLoading class: " + className);
             Class<?> cls = Class.forName(className, true, classLoader);
@@ -65,13 +56,4 @@ public class Run implements Runnable {
 
     }
 
-    @Override
-    public void run() {
-        executeFile();
-    }
-
-    public static void main(String[] args) {
-        int exitCode = new CommandLine(new Run()).execute(args);
-        System.exit(exitCode);
-    }
 }

@@ -4,6 +4,7 @@ import picocli.CommandLine.Command;
 
 @Command(name = "expressor",
         version = "express 1.0",
+        //--help
         mixinStandardHelpOptions = true,
         subcommands = {Transpile.class ,Run.class, Build.class})
 public class Expressor implements Runnable {
