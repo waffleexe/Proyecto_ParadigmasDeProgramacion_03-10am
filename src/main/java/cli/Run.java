@@ -1,11 +1,7 @@
 package cli;
 
-import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Parameters;
-import picocli.CommandLine.Option;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -19,21 +15,18 @@ public class Run extends BaseCommand {
 
     @Override
     public void run() {
-        File javaFile = generateJavaFile();
-        if (javaFile == null) return;
-
         //compile the java file
         Build build = new Build();
-        build.expressoFile = javaFile;
+        build.file = file;
         build.directory = directory;
         build.verbose = verbose;
         build.run();
-
+        if (file == null) return;
 
         URLClassLoader classLoader = null;
         try {
             classLoader = URLClassLoader.newInstance(new URL[]{directory.toURI().toURL()});
-            String className = javaFile.getName().substring(0, javaFile.getName().lastIndexOf('.'));
+            String className = file.getName().substring(0, file.getName().lastIndexOf('.'));
 
             if (verbose) System.out.println("\nLoading class: " + className);
             Class<?> cls = Class.forName(className, true, classLoader);
@@ -42,9 +35,10 @@ public class Run extends BaseCommand {
             Method main = cls.getMethod("main", String[].class);
             String[] params = null;
 
-            System.out.println("\n\n==== ===== ====\n");
-            System.out.println("\n\n==== " + className + ".java ====\n");
+            System.out.println("\n\n==== ===== ==== === ===");
+            System.out.println("==== " + className + ".java ====\n");
             main.invoke(null, (Object) params);
+            System.out.println("\n\n==== ===== ==== === ===");
 
         } catch (MalformedURLException | ClassNotFoundException | NoSuchMethodException e) {
             throw new RuntimeException(e);

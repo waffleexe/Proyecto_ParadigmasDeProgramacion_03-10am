@@ -1,4 +1,5 @@
 package cli;
+
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
@@ -13,10 +14,9 @@ public class Expressor implements Runnable {
         System.out.println("-Expressor CLI- \n" +
                 "Subcommands: \n" +
                 "Transpile: \n" +
-                "Saves in archivo.java the simulation of a fake transpilation from " +
-                "a source archivo.expresso.\n" +
+                "Saves in .java the transpilation from a source .expresso.\n" +
                 "Build: \n" +
-                "Fakes the transpilation and then compiles archivo.java into archivo.class.\n" +
+                "Makes the transpilation and then compiles .java into .class.\n" +
                 "Run: \n" +
                 "Equivalent to the sequence of the previous two plus the execution of the class.");
     }

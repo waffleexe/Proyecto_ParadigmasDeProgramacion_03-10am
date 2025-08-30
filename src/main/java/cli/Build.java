@@ -2,26 +2,21 @@ package cli;
 
 import picocli.CommandLine.Command;
 
-
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
-import java.io.File;
 
 @Command(name = "build",
         description = "Compilation of the generated Java file (creates .class)",
         mixinStandardHelpOptions = true)
 public class Build extends BaseCommand {
 
-
-
     @Override
     public void run() {
-        File javaFile = generateJavaFile();
-
-        if (javaFile == null)
-            return;
-
-        createOutputDirectory();
+        Transpile transpile = new Transpile();
+        transpile.file = file;
+        transpile.directory = directory;
+        transpile.verbose = verbose;
+        file = transpile.generateJavaFile();
 
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
@@ -31,7 +26,7 @@ public class Build extends BaseCommand {
         }
 
         if (verbose) System.out.println("\nCompiling Java file...");
-        int result = compiler.run(null, null, null, "-d", directory.getAbsolutePath(), javaFile.getPath());
+        int result = compiler.run(null, null, null, "-d", directory.getAbsolutePath(), file.getPath());
 
         if (result == 0) {
             if (verbose) System.out.println(".class file generated in " + directory);
