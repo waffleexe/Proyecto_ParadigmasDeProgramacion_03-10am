@@ -1,6 +1,7 @@
 plugins {
     id("java")
     id("application")
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "cli"
@@ -28,7 +29,7 @@ tasks.jar {
     manifest {
         attributes (
             "Main-Class" to "cli.Expressor")
-        }
+    }
 
 
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
